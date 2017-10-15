@@ -1,0 +1,10 @@
+#!/bin/bash
+ROZ="$1"
+DNI="$2"
+NAZ="$3"
+
+echo Znalezione pliki:
+find . -name "*.$ROZ" -mtime -$DNI -print > lista_plikow
+tar -cvf $NAZ.tar -T lista_plikow
+
+#wywołanie: sh zad3 [rozszerzenie v nazwa] data_modyfikacji nazwa_archiwum  

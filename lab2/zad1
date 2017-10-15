@@ -1,0 +1,13 @@
+#!/bin/bash
+n_day=`date +%u`
+echo Dziś mamy piękny $n_day dzień tygodnia czyli
+if [ $n_day -eq "6" ];
+then
+    echo Weekend
+elif [ $n_day -eq "7" ];
+then
+    echo Weekend
+else
+    echo Dzień Roboczy
+fi
+   

@@ -1,0 +1,3 @@
+#!/bin/bash
+n_day=`date +%u`
+echo Dziś mamy piękny $n_day dzień tygodnia
