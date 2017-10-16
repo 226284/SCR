@@ -5,78 +5,55 @@ ROZ="0"
 DNI=0
 NAZ="0"
 
-PARSED_OPTIONS=$(getopt -n "$0" -o hn:m:a: -- "$@")
- 
-if [ $? -ne 0 ];
-then
-  exit 1
-fi
- 
-eval set -- "$PARSED_OPTIONS"
-
-
-while true;
+while getopts ":n:m:a:" opt;
 do
-  case "$1" in
- 
-    -h)
-      echo "sh zad4 -n [rozszerzenie_pliku] -m [liczba_dni_od_modyfikacji] -a [nazwa_archiwum]"
-     exit 1;;
+  case $opt in
  
     -n)
-      if [ -n "$2" ];
-      then
-	ROZ=$2
-        #echo "$ROZ"
-      fi
-      shift 2;;
+	echo "Wywołano parametr -n" >&2
+	ROZ=$OPTARG;;
  
     -m)
-      if [ -n "$2" ];
-      then
-	DNI=$2
-        #echo "$DNI"
-      fi
-      shift 2;;
+	echo "Wywołano parametr -m" >&2
+	DNI=$OPTARG;;
  
     -a)
-      if [ -n "$2" ];
-      then
-	NAZ=$2
-        #echo "$NAZ"
-      fi
-      shift 2;;
+	echo "Wywołano parametr -a" >&2
+	NAZ=$OPTARG;;
  
-    --)
-      shift
-      break;;
+    \?)
+	echo "Nieprawodłowy parametr: -$OPTARG" >&2;;
+    :)
+	echo "Opcja -$OPTARG wymaga podania argumentu" >&2
+	exit 1;;
+    
   esac
 done
 
 if [ $ROZ = "0" ];
 then
-    #ROZ="nowa_nazwa" #wprowadź nowe rozszerzenie pliku
+    echo "Wprowadź nazwę pliku lub rozszerzenie"
     read NEW_NAME
-    $ROZ=NEW_NAME
+    ROZ=$NEW_NAME
     #echo "$ROZ"
 fi
 
 if [ $DNI -eq 0 ];
 then
-    #wprowadź liczbę dni od ostaniej modyfikacji
+    echo "Wprowadź liczbę dni od ostaniej modyfikacji"
     read NEW_NUMBER
-    $DNI=NEW_NUMBER
+    DNI=$NEW_NUMBER
     #echo "$DNI"
 fi
 
 if [ $NAZ = "0" ];
 then
-    #wprowadz nazwę archiwum
+    echo "Wprowadz nazwę archiwum"
     read NEW_NAME
-    $NAZ=NEW_NAME
+    NAZ=$NEW_NAME
     #echo "$NAZ"
 fi
 
 echo Znalezione pliki:
-find . -name "*.$ROZ" -mtime -$DNI -print > lista_plikow
+find . -name "$ROZ" -mtime -$DNI -print > lista_plikow
 tar -cvf $NAZ.tar -T lista_plikow

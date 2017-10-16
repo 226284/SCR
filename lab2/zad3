@@ -4,7 +4,9 @@ DNI="$2"
 NAZ="$3"
 
 echo Znalezione pliki:
-find . -name "*.$ROZ" -mtime -$DNI -print > lista_plikow
+find . -name "$ROZ" -mtime -$DNI -print > lista_plikow
 tar -cvf $NAZ.tar -T lista_plikow
 
-#wywołanie: sh zad3 [rozszerzenie v nazwa] data_modyfikacji nazwa_archiwum  
+# wywołanie: sh zad3 [rozszerzenie v nazwa] data_modyfikacji nazwa_archiwum  
+# aby poprawnie wczytać pliki do wyszukania należy wyłączyć tzw globbing
+# używająć komendy set -f

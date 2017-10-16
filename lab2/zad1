@@ -1,4 +1,5 @@
 #!/bin/bash
+LC_ALL=C
 n_day=`date +%u`
 echo Dziś mamy piękny $n_day dzień tygodnia czyli
 if [ $n_day -eq "6" ];
