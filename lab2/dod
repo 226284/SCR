@@ -1,6 +1,0 @@
-#!/bin/bash                                                                                            
-./prtdiag -v > dane
-
-#grep -C 2 CPU dane.txt
-
-

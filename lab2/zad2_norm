@@ -1,0 +1,8 @@
+#!/bin/bash
+I=1
+for WERS in $(cat adresy.txt)
+do
+    echo "$WERS"
+    cat tresc.txt | mail -s "Okna rolety wszystko" -a spec*.pdf -. $WERS #wysłanie tekstu i załączników
+    I=`expr $I + 1`
+done

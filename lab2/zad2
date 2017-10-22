@@ -1,8 +1,20 @@
 #!/bin/bash
-I=1
-for WERS in $(cat adresy.txt)
+zadana="$1"
+flaga=0
+
+echo Wczytana temperatura: $zadana C
+
+for i in 0 1 2 3 4 5 6 7
 do
-    echo "$WERS"
-    cat tresc.txt | mail -s "Okna rolety wszystko" -a spec*.pdf -. $WERS #wysłanie tekstu i załączników
-    I=`expr $I + 1`
+./prtdiag -v | grep -w CPU$i > line.txt
+read pierwszy drugi trzeci < line.txt
+if [ $drugi -gt $zadana ]
+then
+flaga=1
+fi
 done
+
+if [ $flaga -eq 1 ]
+then
+echo "Temperatura procesora jest wyższa niż zadana"
+fi
