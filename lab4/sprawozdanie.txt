@@ -1,0 +1,93 @@
+Zad.2
+Uruchomiono program z poprzedniego zadania, uzyskano następujące wyniki:
+SigBlk:	0000000000000000
+SigIgn:	0000000000000000
+SigCgt:	0000000000006202
+
+liczby zapisane są w postaci szesnastkowej, aby dowiedzieć się co oznaczają należy przeliczyyyć je na postać binarną
+
+SigBlk - sygnały zablokowane
+SigIgn - sygnały ignorowane
+SigCgt - sygnały przechwytywane
+
+rozkodowana liczba dla sygnałów przechwytywanych:
+0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0110 0010 0000 0010
+
+Wystąpiły 4 sygnały:
+2 - SIGINT, 10 - SIGUSR1, 14 - SIGALRM, 15 - SIGTERM
+
+b) uruchomiono potok: ./zad1 | cat | cat
+za pomocą polecenia ps -ef zbadano PID procesów, a następnie wyszukano zależności procesów: za pomocą komendy ls -l
+
+michal    3218  2738  0 22:54 pts/0    00:00:02 ./zad1
+michal    3219  2738  0 22:54 pts/0    00:00:00 cat
+michal    3220  2738  0 22:54 pts/0    00:00:00 cat
+michal    3263  3128  0 23:05 pts/1    00:00:00 ps -ef
+michal@Sonya / $ ls -l /proc/3218/fd
+razem 0
+lrwx------ 1 michal michal 64 paź 27 22:57 0 -> /dev/pts/0
+l-wx------ 1 michal michal 64 paź 27 22:57 1 -> pipe:[52870]
+lrwx------ 1 michal michal 64 paź 27 22:54 2 -> /dev/pts/0
+michal@Sonya / $ ls -l /proc/3219/fd
+razem 0
+lr-x------ 1 michal michal 64 paź 27 23:05 0 -> pipe:[52870]
+l-wx------ 1 michal michal 64 paź 27 23:05 1 -> pipe:[52872]
+lrwx------ 1 michal michal 64 paź 27 22:54 2 -> /dev/pts/0
+michal@Sonya / $ ls -l /proc/3220/fd
+razem 0
+lr-x------ 1 michal michal 64 paź 27 23:05 0 -> pipe:[52872]
+lrwx------ 1 michal michal 64 paź 27 23:05 1 -> /dev/pts/0
+lrwx------ 1 michal michal 64 paź 27 22:54 2 -> /dev/pts/0
+michal@Sonya / $ 
+
+wniosek: widać zależności potoków, jak przekazywane jest wyjście na wejście kolejnego procesu, dodatkowo pierwsza para procesów ma swój numer, tak samo druga para ma inny
+
+Zad.3
+Napisałem prosty program w C:
+#include <stdio.h>
+#include <time.h>
+
+int main(){
+    while(1){
+      sleep(1);
+      printf("Dzialam\n");
+    }
+    return 0;
+}
+
+a)
+Za pomocą komendy: strace -p [nr_procesu] sprawdziłem wykonanie powyższego programu:
+
+mwieczor@panamint:~/SCR/lab4$ strace -p 20619
+Process 20619 attached
+restart_syscall(<... resuming interrupted call ...>) = 0
+write(1, "Dzialam\n", 8)                = 8
+rt_sigprocmask(SIG_BLOCK, [CHLD], [], 8) = 0
+rt_sigaction(SIGCHLD, NULL, {SIG_DFL, [], 0}, 8) = 0
+rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+nanosleep({1, 0}, 0x7ffe328024a0)       = 0
+
+Linijka z write informuje nas, iż słowo "Dzialam" zostaje wypisane na standardowe wyjście. następnie sprawdzane są sygnały, a na koniec funkcla nanosleep opóźnia program o sekundę.
+
+b)
+
+c)
+za pomocą komendy truss -u 'libc:*printf' -c ls, możemy zliczyć ile wywołań printf następuje przy wywołaniu ls:
+Library:             Function                                 calls
+libc:                printf                                   10
+
+d)
+komendą: truss -c pico wywołałem edytor tekstu, jak się okazało było tam 35 otworzeń i 37 zamknięć, przy próbie śledzenia programu i jednoczesnego pisania, program nie korzystał już więcej z funkcji open, jedynie z read i write.
+
+Zad.4
+Uruchomiłem program który co 100ms wypisywał jakieś słowo, a następnie za pomocą komendy strace -p <PID> sprawdziłem wykonanie programu:
+nanosleep({0, 10000000}, NULL)          = 0
+write(1, "SPAM\n", 5)                   = 5
+
+również możemy wywołać komendę:
+strace ls, którą zbadamy wywołania funkcji programu ls lub innych
+
+aby wyświetlić operacje na konkretnej funkcji, do strace należy dodać opcję -e, dostaniemy wtedy tylko wywołania zdefiniowanej przez nas funkcji
+
+Działanie programu strace jest bardzo podobne do tego przy komendzie truss, tak samo otrzymujemy informacje odnośnie wykonywanych przez program czynności.
+

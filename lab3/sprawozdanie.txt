@@ -1,0 +1,87 @@
+Michał Wieczorek, 226284
+
+Zad. 1
+ps -ef # wyświetla wszystkie działające procesy
+z ważniejszych informacji które możemy odczytać to np:
+UID - przez kogo został wywołany proces,
+PID - unikalny nr procesu
+STIME - pokazuje godzinę o której uruchomiono proces
+CMD - źródło z którego go uruchomiono
+
+Bardzo podobną komendą jest:
+ps -aux
+pokazuje również użycie procesora i pamięci RAM
+
+Ilość uruchomionych procesów:
+ps -aux | wc -f
+u mnie wyszło 167
+
+Ile procesów sshd istieje na serwerze:
+ps -ef | grep sshd | wc -l
+wyświetlona liczba: 38
+
+Zad. 2
+Napisałem 3 skrypty, pierwszy uruchamia drugi, drugi uruchamia 3 w którym jest
+pętla wypisująca wyraz co sekundę. Po usunięciu środkowego procesu, proces nr 1
+kończy swoją pracę, tak samo jak zabity proces 2. Proces 3 zostaje przejęty
+przez init i nie przerywa swojej pracy.
+
+Zad. 3
+Napisany skrypt który w pętli wyświetla jakieś słowo co sekundę.
+Uruchomienie procesów potokiem:
+sh test | sh test | sh test
+Okazuje się że procesy mają takie same PPID ale inne PID.
+Czyli mają tego samego rodzica
+
+Zad. 4
+Kolejkę stworzyłem za pomocą komendy mkfifo "nazwa", u mnie nazwa=kolejka.
+Jest to polecenie podobne do mknod. Aby dodać coś do kolejki wystarczy napisać
+cat > kolejka. W drugim terminalu wystarczy uruchmić cat kolejka, teraz możemy
+wyświetlać wejściowy strumień w drugim terminalu. Napisałem 3 skrypty
+wprowadzające jakieś słowo co sekundę na standardowe wejście. Uruchomiłem je
+tak jak w poleceniu. Po uruchomieniu nowego procesu wpisującego, zmieniało się
+wyjście w innym terminalu, inaczej mówiąc wpisywanie nowego procesu zaburzało
+wypisywanie danych.
+Po zamknięciu procesu czytającego w jednym terminalu, rolę tę przejął inny
+terminal, wyświetlając teraz również jego wejście na kolejkę. Po zamknięciu
+skryptu piszącego, wszystko wraca do poprzedniego działania.  
+
+Zad. 5
+Napisałem skrypt który wyświetla godzinę co sekundę.
+Otrzymałem następujące komunikaty
+SIGHUB - Rozłączono, zakończono proces
+SIGINT - dodano pustą linię odstępu a następnie zakończono proces
+SIGQUIT - Wyjście, zakończono proces
+SIGILL - Błędna instrukcja
+SIGTRAP - Pułapka debbugera/breakpoint
+SIGFPE - Błąd w obliczeniach zmiennoprzecinkowych
+Do skryptu dodałem linię:
+trap "echo próba_zabicia_procesu" 1 2 3
+Zabicie procesu sygnałami 1 2 3 nie powiodło się, a na wyjściu wyświetlia się
+wprowadzona wcześniej fraza. Proces udało się zabić SIGKILL - 9.
+
+Zad. 6
+SIGSTOP zatrzymuje proces, co można zobaczyć wpisując jobs, aby wznowić
+działanie należy podać komendę SIGCONT. Dodatkowo po wypisaniu listy procesów
+okazało się że przy zatrzymanym widnieje pozycja <defunkt>. Ctrl+Z powoduje
+zatrzymanie procesu. Polecenie bg przenosi proces, aby działał w tle natomiast
+fg na wierzchu terminala. SIGCONT powoduje wznowienie procesu takim jakim
+został uruchomiony, jeżeli był wywołany w tle zostanie w tle, jeśli był na
+wierzchu - zostanie kontynuowany na wierzchu.
+
+Zad. 7
+Ulimit -u wyświetlił ile może być uruchomionych procesów ( u mnie polecenie
+wyświetliło liczbę 7823), kiedy dopiszemy liczbę po tej komendzie np. 350.
+Ograniczony zostanie górny próg liczby procesów do zdefinowanej przez nas
+wartości. Uruchomiłem proces który wywołuje sam siebie (tzw. fork bomb).
+Uruchomione zostało kilkadziesiąt procesów, a następnie wyskoczył komunikat
+cannot fork, czyli osiągnięto górny limit.
+
+Zad. 8
+Po użyciu polecenia top wyświetają się informacje na temat uruchomionych prcesów
+zużycie procesora, pamięci, czas działania itp. W kolumnie NI podane są
+priorytety procesów. Można je zmienić za pomocą komendy renice:
+renice -n [priorytet (-20 - 20)] -p [nr_procesu]
+większość procesów ma wartość nice 0, ale zdarzają się takie które mają -20
+Po przydzieleniu wyższej wartości nice, proces zabiera dla sb więcej pamięci
+procesora.

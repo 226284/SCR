@@ -1,0 +1,7 @@
+#!/bin/bash
+
+while true
+do
+    echo "cos"
+    sleep 1
+done

@@ -1,0 +1,12 @@
+#!/bin/bash
+
+#!/bin/bash
+
+trap "echo dzień dobry" 1 2 3
+
+while true
+do
+    date
+    sleep 1
+done
+

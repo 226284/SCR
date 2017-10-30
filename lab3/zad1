@@ -1,0 +1,4 @@
+#!/bin/bash
+
+ps -f
+pgrep -u root sshd #wyświetla procesy sshd

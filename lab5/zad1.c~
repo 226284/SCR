@@ -1,0 +1,40 @@
+#include <stdio.h>
+#include <unistd.h>
+
+int main(){
+
+  int fields[2];
+  pid_t childPID;
+  char str[100];
+  char readstr[100];
+  
+  
+  pipe(fields);
+
+  if ((childPID = fork()) == -1)
+  {
+    fprintf (stderr, "Fork error\n");
+    return 1;
+  }
+
+  if (childPID == 0){
+    close(fields[0]);
+    
+    /*odpytanie użytkownika o nazwę pliku do odczytu*/
+    printf ("Podaj nazwę pliku do odczytu: ");
+    scanf ("%s", str);
+    printf ("Odczytana nazwa: %s\n", str);
+
+    /* wysyłanie stringa do procesu potomnego*/
+    write(fields[1], str, sizeof(str));
+    return 0;
+  }
+  else{
+    close(fields[1]);
+    /*czytanie stringa z wyjścia potoku rodzica*/
+    read(fields[0], readstr, sizeof(readstr)); 
+    printf ("Otrzymany string w potoku dziecka: %s\n", readstr);
+  }
+
+  return 0;
+}
