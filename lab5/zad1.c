@@ -8,8 +8,6 @@ int main(){
   pid_t childPID;
   char str[100];
   char readstr[100];
-  FILE *pic;
-  FILE *new;
   
   pipe(fields);
 
@@ -25,24 +23,19 @@ int main(){
     /*odpytanie użytkownika o nazwę pliku do odczytu*/
     printf ("Podaj nazwę pliku do odczytu: ");
     scanf ("%s", str);
-    //printf ("Odczytana nazwa: %s\n", str);
-
-    pic = fopen (str, "r");
+    printf ("Odczytana nazwa: %s\n", str);
     
-    /* wysyłanie obrazka do procesu potomnego*/
-    write(fields[1], pic, sizeof(pic));
-
-    fclose(pic);
+    write(fields[1], str, sizeof(str));
     
     exit(0);
   }
   else{
     close(fields[1]);
-    close(0);
-    dup(fields[0]);
-    
-    execl("/usr/bin/display", "display", NULL);
-    fprintf (stderr, "execl failure\n");
+
+    printf ("Wypisanie w procesie dziecka: ");
+    read (fields[0], readstr, sizeof(readstr));
+    printf ("%s",readstr);
+
     exit(0);
   }
 
