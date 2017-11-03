@@ -56,20 +56,15 @@ int main(){
 }
 
 a)
-Za pomocą komendy: strace -p [nr_procesu] sprawdziłem wykonanie powyższego programu:
+Za pomocą komendy: truss -p [nr_procesu] sprawdziłem wykonanie powyższego programu:
 
-mwieczor@panamint:~/SCR/lab4$ strace -p 20619
-Process 20619 attached
-restart_syscall(<... resuming interrupted call ...>) = 0
-write(1, "Dzialam\n", 8)                = 8
-rt_sigprocmask(SIG_BLOCK, [CHLD], [], 8) = 0
-rt_sigaction(SIGCHLD, NULL, {SIG_DFL, [], 0}, 8) = 0
-rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
-nanosleep({1, 0}, 0x7ffe328024a0)       = 0
+nanosleep(0xFFBFFC80, 0xFFBFFC78)               = 0
+write(1, " D z i a l a m\n", 8)                 = 8
 
-Linijka z write informuje nas, iż słowo "Dzialam" zostaje wypisane na standardowe wyjście. następnie sprawdzane są sygnały, a na koniec funkcla nanosleep opóźnia program o sekundę.
+Linijka z write informuje nas, iż słowo "Dzialam" zostaje wypisane na standardowe wyjście, funkcja nanosleep opóźnia program o sekundę.
 
 b)
+do śledzienia wywołań systemowych możemy użyć opcji -t, truss -t
 
 c)
 za pomocą komendy truss -u 'libc:*printf' -c ls, możemy zliczyć ile wywołań printf następuje przy wywołaniu ls:
@@ -80,14 +75,19 @@ d)
 komendą: truss -c pico wywołałem edytor tekstu, jak się okazało było tam 35 otworzeń i 37 zamknięć, przy próbie śledzenia programu i jednoczesnego pisania, program nie korzystał już więcej z funkcji open, jedynie z read i write.
 
 Zad.4
-Uruchomiłem program który co 100ms wypisywał jakieś słowo, a następnie za pomocą komendy strace -p <PID> sprawdziłem wykonanie programu:
-nanosleep({0, 10000000}, NULL)          = 0
-write(1, "SPAM\n", 5)                   = 5
+Uruchomiłem program z zadania powyższegoo, a następnie za pomocą komendy strace -p <PID> sprawdziłem wykonanie programu:
 
-również możemy wywołać komendę:
-strace ls, którą zbadamy wywołania funkcji programu ls lub innych
+mwieczor@panamint:~$ strace -p 19633
+Process 19633 attached
+restart_syscall(<... resuming interrupted call ...>) = 0
+write(1, "Dzialam\n", 8)                = 8
+rt_sigprocmask(SIG_BLOCK, [CHLD], [], 8) = 0
+rt_sigaction(SIGCHLD, NULL, {SIG_DFL, [], 0}, 8) = 0
+rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+nanosleep({1, 0}, 0x7ffedff2f220)       = 0
 
-aby wyświetlić operacje na konkretnej funkcji, do strace należy dodać opcję -e, dostaniemy wtedy tylko wywołania zdefiniowanej przez nas funkcji
+Program strace zwrócił bardzo podobną zawartość jak w programie truss, dodatkowo uzyskujemy informacje na temat przechwyconych sygnałów.
 
-Działanie programu strace jest bardzo podobne do tego przy komendzie truss, tak samo otrzymujemy informacje odnośnie wykonywanych przez program czynności.
-
+Badanie plików konfiguracyjnych:
+strace -e open /bin/bash
+Ponieważ pliki konfiguracyjne w systemie linux przechowywane są w katalogu /etc, należy znaleźć je na wypisanej liście.

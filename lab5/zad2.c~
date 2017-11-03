@@ -1,0 +1,53 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
+#define ROZMIAR 1024
+
+int main(){
+
+  int fields[2];
+  int fd1, fd2, fdin;
+  pid_t childPID;
+  char str[100];
+  char buf[ROZMIAR];
+
+  /*odpytanie użytkownika o nazwę pliku do odczytu*/
+  printf ("Podaj nazwę pliku do odczytu: ");
+  scanf ("%s", str);
+  fd1 = open (str, O_RDONLY, 0);
+  
+  pipe(fields);
+
+  if ((childPID = fork()) == -1)
+  {
+    fprintf (stderr, "Fork error\n");
+    exit(1);
+  }
+
+  if (childPID == 0){
+    close(0);
+    dup(fields[0]);
+    close(fields[1]);
+    
+    execl("/usr/bin/display", "display", NULL);
+    fprintf (stderr, "execl failure\n");
+    
+    exit(0);
+  }
+  
+  else{
+    close(1);
+    dup(fields[1]);
+    close (fields[0]);
+    
+    while ((fdin = read (fd1, buf, ROZMIAR)) > 0){
+      //printf ("%s", buf);
+      write (fields[1], buf, fdin);
+    }
+    
+    exit(0);
+  }
+
+  return 0;
+}
