@@ -24,16 +24,6 @@ int main(){
       perror("Nie udało się utworzyć wspólnej pamięci");
       exit(1);
     }
-
-    /*odpytanie użytkownika o nazwę pliku do odczytu*/
-    printf ("Podaj nazwę pliku do odczytu: ");
-    scanf ("%s", str);
-    
-    /*statystyka*/
-    stat(str, &st);
-    size = st.st_size;
-    printf("Liczba bajtów: %d\n",size);
-    
     
   if ((childPID = fork()) == -1) // jeśli operacja fork się nie powiodła
   {
@@ -42,22 +32,26 @@ int main(){
   }
 
   if (childPID == 0){ // proces dziecka
-    fd2 = shmd;
-    close (0);
-    dup (fd2);
-    execl("/usr/bin/display", "display -update 1", NULL);
+    execlp("eog","eog", "/dev/shm/shm_testmem", NULL);
     fprintf (stderr, "execl failure\n"); // jeśli błąd display
   }
   
   else{ // proces rodzica
+    while (1){
+    /*odpytanie użytkownika o nazwę pliku do odczytu*/
+    printf ("Podaj nazwę pliku do odczytu: ");
+    scanf ("%s", str);
+    
+    /*statystyka*/
+    stat(str, &st);
+    size = st.st_size;
+    printf("Liczba bajtów: %d\n",size);
 
     fd1 = open (str, O_RDONLY, 0);
     ftruncate(shmd, size);
     buf = (char*)mmap(NULL, size, PROT_WRITE|PROT_READ, MAP_SHARED, shmd, 0);
     read (fd1, buf, size); // przepisujemy zawartość
-    // write (1, buf, size);
     msync(buf, sizeof(buf), MS_SYNC);
-
-    exit(0);
+    }
   }
 }
