@@ -1,0 +1,11 @@
+\BOOKMARK [2][]{Outline0.1}{Spis tresci}{}% 1
+\BOOKMARK [2][]{Outline0.2}{Struktura systemu}{}% 2
+\BOOKMARK [2][]{Outline0.3}{Rodzaje zagrozen}{}% 3
+\BOOKMARK [3][]{Outline0.3.1.4}{Buffer Overflow}{Outline0.3}% 4
+\BOOKMARK [3][]{Outline0.3.2.5}{Exploit}{Outline0.3}% 5
+\BOOKMARK [3][]{Outline0.3.3.6}{Kernel drivers}{Outline0.3}% 6
+\BOOKMARK [3][]{Outline0.3.4.7}{Statystyka}{Outline0.3}% 7
+\BOOKMARK [2][]{Outline0.4}{Metody zabezpieczania}{}% 8
+\BOOKMARK [3][]{Outline0.4.1.9}{Filtrowanie ruchu sieciowego}{Outline0.4}% 9
+\BOOKMARK [3][]{Outline0.4.2.10}{Wykrywanie w\233aman i kontrola plik\363w}{Outline0.4}% 10
+\BOOKMARK [3][]{Outline0.4.3.11}{Ograniczenie szk\363d wywo\233anych w\233amaniem}{Outline0.4}% 11

@@ -1,0 +1,46 @@
+System operacyjny możemy podzielić na 3 główne warstwy:
+* pierwsza warstwa to interfejsy użytkownika, warstwa ta stanowi zbiór poleceń w której aplikacje użytkownika mogą wydawać polecenia systemowe, jest jakby pośrednikiem między użytkownikiem a systemem operacyjnym
+* druga warstwa to jądro systemu, jest to zbiór programów do zarządzania procesami, ich pamięcią, kontrolą wątków, nadzorowania pracy programów, w jądrze systemu znajdują się również sterowniki które umożliwiają współpracę z kolejną warstwą
+* warstwa sprzętowa czyli hardware,
+
+Zagrożenia w warstwie poleceń, shellu, programach użytkowych
+* z pomocą powłoki użytkownik może zarządzać większością funkcji systemu operacyjnego, dlatego zagrożenie ze strony jej nieprawidłowego działania jest duże
+* do pierwszej warstwy można również zaliczyć programy autoryzacyjne - potwierdzające prawa dostępu użytkownika, np. weźmy pod uwagę program do zmiany hasła, jeśli nie działaby on poprawnie - dałoby się zmienić hasło innego użytkownika lub administratora
+* większość włamań następuje z poziomu aplikacji np. przeglądarki internetowej, 
+błędami w programach użytkowych które wykorzystuje się do włamań są zazwyczaj błędy przepełnienia bufora (ang. buffer overflow vulnerabilities),
+* ^ polega na nadpisywania pamięci procesu która nigdy nie powinna zostać nadpisana, przeważnie działa to na takiej zasadzie, że wykorzystujemy nadpisaną pamięć do dostępu do komputera
+jeżeli proces działa z prawami administratora, to może on wykonać dowolną operację
+ck: obecnie ten rodzaj bugów wykorzystuje się również do włamań na serwisy internetowe
+* wymienionych zagrożeń nie da się całkowicie wyeliminować ponieważ w aplikacjach dostarczanych przez różnych developerów zawsze znajdą się jakieś błędy
+
+Zagrożenia w warstwie jądra systemu operacyjnego
+* tzw. exploity są to błędy wynikające z niewłaściwego przydzielania pamięci dla procesów, może dojść do sytuacji gdzie proces uzyskuje dostęp do pamięci innego procesu, a w gorszym przypadku gdy może modyfikować tą pamięć, 
+ck: zdarzyło się że kiedyś nie zauważono błędu przez 2 lata, który znajdował się w jądrze linuxa, funkcji vmsplice, uruchomienie tego programu skutkowało przydzieleniem praw administratora każdemu użytkownikowi
+* niewłaściwa obsługa systemów plików, niewłaściwe zarządzanie prawami dostępu do plików
+* błędy na poziomie warstwy jądra wykrywane są bardzo rzadko, dlatego dużo trudniej włamać się do systemu, jednak taki rodzaj włamania ma poważne konsekwencje
+
+Zagrożenia w warstwie sprzętu
+* w tej warstwie raczej nie uświadczymy żadnych zagrożeń, jedynie tych związanych z wadami sprzętu które doprowadzą do utraty danych (awaria dysku twardego)
+* istotnym problemem ze strony sprzętu jest jego postęp technologiczny, tyczy się to również oprogramowania które musi nadążyć nad ciągłym rozwojem technologii, ponieważ programiści muszą wprowadzać nowe sterowniki do jądra systemu
+ck: w systemach strategicznych - czyli o dużym znaczemu nie aktualizuje się sterowników bez potrzeby, 
+
+Metody zabezpieczania systemów komputerowych
+* mechanizmy filtrowania ruchu sieciowego - najskuteczniejszym rozwiązaniem byłoby odłączenie się od sieci Internet, jak np w wojsku czy w bankach, żeby tego uniknąć filtruje się według określonych zasad ruch sieciowy wchodzący i wychodzący do systemu, nazwa tego zabezpieczenia to firewall czyli zapora sieciowa, zabezpieczenie firewall filtruje połączenia między siecią lokalną a globalną, istnieje też możliwość dostępu do komputerów na zewnątrz sieci przez użytkowników sieci lokalnej, 
+* mechanizmy filtrowania mogą się od sb różnić, wyróżnia się dwie podstawowe metody filtracji, pierwsza zakłada blokowanie całego ruchu sieciowego, dopiero później określa się warunki na podstawie których połączenia zostaną przepuszczone przez zaporę,
+w drugiej metodzie cały ruch sieciowy jest dozwolony, a wprowadzanie reguł bezpieczeństwa blokuje poszczególne połączenia, bardzo podobne metody jednak różnica w ich działaniu jest spora
+Przykładem najprostszej zapory sieciowej jest zapora filtrująca pakiety, packet filtering firewall
+
+Mechanizmy wykrywania włamań:
+* granica pomiędzy filtrowaniem ruchu i wykrywaniem włamań zanika np system: Intrusion Detection System
+* coraz częściej wprowadza się też mechanizm kontroli zmian w plikach systemowych
+* IDS możemy podzielić na 2 kategorie: bierne i czynne, bierne to takie które informują administratora o włamaniu a czynne które mogą podjąć próbę blokady ataku
+
+Analiza heurystyczna – łączeniu pakietów w strumienie danych, analizie nagłówków pakietów oraz analizie protokołów aplikacyjnych. Pozwala wytypować pakiety mogące doprowadzić do zdestabilizowania docelowej aplikacji w razie obecności w niej błędów implementacyjnych.
+Analiza sygnaturowa – polegająca na wyszukiwaniu w pakietach ciągów danych charakterystycznych dla znanych ataków sieciowych. Kluczowym elementem jest baza sygnatur, budowana wraz z pojawianiem się nowych ataków i odpowiednio często aktualizowana.
+
+Mechanizmy ograniczające skutki włamań do systemów operacyjnych
+* jest to dość świeże zagadnienie, celowo w tytule podane jest że oprogramowanie ma tylko ograniczyć skutki włamań, nie zlikwidować je całkowicie,
+* pierwsza metoda to kontrola i ograniczenie przywilejów uruchamianych wewnątrz systemu procesów, pozwalają na wykrycie i uniemożliwienie wykorzsytania błędów przepełnienia stosu (stack overfull), niestety aktualnie znikoma liczba systemów operacyjnych implementuje tą metodę zabezpieczeń
+ck: jedenym z ważniejszych projektów tej metody jest Security-Enhanced Linux (SELinux) stworzony przez NSA, co ciekawe jest on udostępniony publicznie, został stworzony alby zabezpieczyć organizacje rządowe i militarne, system różni się polityką kontroli dostępu do zasobów, wprowadzono protokół Mandatory Access Control, którego model przypomina reguły zapór sieciowych. Administrator definiuje filtry dostępu do plików, użytkownik nie ma wpływu na działanie protokołów bezpieczeństwa
+dodatkowym zabezpieczniem jest wielopoziomowy model bezpieczeństwa (Multi-Level Security), który swoje zastosowanie ma w systemach wojskowych, a polega na przesyłaniu informacji z dolnej warstwy (poufnej) do wyższych, które są coraz to bardziej tajne, niemożliwe jest przesłanie informacji z warstwy tajnej do niższej poufnej, ta metoda jest bezpieczna jednak mało elastyczna,
+w selinux prawa dostępu nie są przydzielane użytkownikom a rolom, (Role-Based Access Control), a dopiero użytkownikowi są przydzielane role, upraszcza to zarządzanie dostępem do danych

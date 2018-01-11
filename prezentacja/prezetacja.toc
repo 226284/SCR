@@ -1,0 +1,11 @@
+\beamer@sectionintoc {1}{Spis tre\IeC {\'s}ci}{2}{0}{1}
+\beamer@sectionintoc {2}{Struktura systemu}{3}{0}{2}
+\beamer@sectionintoc {3}{Rodzaje zagro\IeC {\.z}e\IeC {\'n}}{4}{0}{3}
+\beamer@subsectionintoc {3}{1}{Buffer Overflow}{4}{0}{3}
+\beamer@subsectionintoc {3}{2}{Exploit}{5}{0}{3}
+\beamer@subsectionintoc {3}{3}{Kernel drivers}{6}{0}{3}
+\beamer@subsectionintoc {3}{4}{Statystyka}{7}{0}{3}
+\beamer@sectionintoc {4}{Metody zabezpieczania}{8}{0}{4}
+\beamer@subsectionintoc {4}{1}{Filtrowanie ruchu sieciowego}{9}{0}{4}
+\beamer@subsectionintoc {4}{2}{Wykrywanie w\IeC {\l }ama\IeC {\'n} i kontrola plik\IeC {\'o}w}{10}{0}{4}
+\beamer@subsectionintoc {4}{3}{Ograniczenie szk\IeC {\'o}d wywo\IeC {\l }anych w\IeC {\l }amaniem}{11}{0}{4}

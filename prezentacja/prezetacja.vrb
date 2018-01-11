@@ -1,0 +1,17 @@
+\frametitle{Wybieranie elementów do plecaka}
+\begin{lstlisting}[basicstyle=\small, tabsize=2]
+	i = ROZMIAR;
+	j = wielkosc;
+
+	while (i > 0 && j > 0) {
+		if (tmp[i][j] != tmp[i - 1][j]) {
+			plecak.push_back(tab[i]);
+			j = j - tab[i].get_masa();
+			i = i - 1;
+		}
+		else {
+			i = i - 1;
+		}
+	}
+
+\end{lstlisting}
